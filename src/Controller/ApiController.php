@@ -13,18 +13,15 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class ApiController extends AbstractController
 {
-    #[Route('/api', name: 'app_api', methods: ['GET'])]
-    public function index(MobileRepository $mobileRepository, SerializerInterface $serializer ): JsonResponse
+    #[Route('/api/mobiles', name: 'app_api', methods: ['GET'])]
+    public function getMobileList(MobileRepository $mobileRepository, SerializerInterface $serializer ): JsonResponse
     {
       $mobiles = $mobileRepository->findAll();
 
       $jsonContent = $serializer->serialize($mobiles, 'json');
 
       $response = new JsonResponse($jsonContent, 200, [], true);
-      return $this->json([
-          'obj' => $jsonContent,
-          'path' => 'src/Controller/ApiController.php',
-      ]);
-      return $jsonContent;
+
+      return $response;
     }
 }
