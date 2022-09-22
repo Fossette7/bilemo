@@ -15,12 +15,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ApiController extends AbstractController
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     #[Route('/api/mobiles', name: 'app_api', methods: ['GET'])]
     public function getMobileList(MobileRepository $mobileRepository, SerializerInterface $serializer ): JsonResponse
 =======
 
 
->>>>>>> add create and show mobile function
+=======
+
     {
       $mobiles = $mobileRepository->findAll();
 
@@ -29,7 +31,8 @@ class ApiController extends AbstractController
       $response = new JsonResponse($jsonContent, 200, [], true);
 
       return $response;
-<<<<<<< HEAD
+
+=======
 =======
     }
 
@@ -71,5 +74,5 @@ class ApiController extends AbstractController
       }
 
       return new JsonResponse(['error' => 'brandName data missing']);
->>>>>>> add create and show mobile function
+
     }
