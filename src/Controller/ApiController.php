@@ -69,3 +69,5 @@ class ApiController extends AbstractController
       return new JsonResponse(['error' => 'brandName data missing']);
 
     }
+}
+
