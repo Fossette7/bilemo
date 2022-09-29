@@ -17,7 +17,6 @@ class ApiController extends AbstractController
 
     #[Route('/api/mobiles', name: 'app_api', methods: ['GET'])]
     public function getMobileList(MobileRepository $mobileRepository, SerializerInterface $serializer ): JsonResponse
-
     {
       $mobiles = $mobileRepository->findAll();
 

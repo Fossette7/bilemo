@@ -22,6 +22,7 @@ class CustomerFixtures extends Fixture
 
         //normal user
         $customer = new Customer();
+        $customer->setUsername("Lise");
         $customer->setEmail("pomme@pommemail.com");
         $customer->setRoles(["ROLE_USER"]);
         $customer->setPassword($this->userPasswordHasher->hashPassword($customer, "123456"));
@@ -29,6 +30,7 @@ class CustomerFixtures extends Fixture
 
         //admin user
         $customerAdmin = new Customer();
+        $customerAdmin->setUsername("Vanessa");
         $customerAdmin->setEmail("admin@pommemail.com");
         $customerAdmin->setRoles(["ROLE_ADMIN"]);
         $customerAdmin->setPassword($this->userPasswordHasher->hashPassword($customerAdmin,"123456"));
