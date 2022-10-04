@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -28,7 +29,7 @@ class ApiController extends AbstractController
 
     }
 
-  #[Route('/api/mobile/{id}', name: 'app_api_mobile_show', methods: ['GET'])]
+  #[Route('/api/mobile/{id}', name: 'api_show_mobile', methods: ['GET'])]
   public function mobileShow(Mobile $mobile, SerializerInterface $serializer ): JsonResponse
   {
     $jsonContent = $serializer->serialize($mobile, 'json');
@@ -37,36 +38,26 @@ class ApiController extends AbstractController
     return $response;
   }
 
-    #[Route('/api/mobile', name: 'app_api_create', methods: ['POST'])]
-    public function create(Request $request, MobileRepository $mobileRepository, EntityManagerInterface $em, SerializerInterface $serializer)
+    #[Route('/api/mobile', name: 'api_create_mobile', methods: ['POST'])]
+    public function create(Request $request, SerializerInterface $serializer, EntityManagerInterface $em) :JsonResponse
     {
-      $jsonData = json_decode($request->getContent(),1);
-      if(!empty($jsonData['brandName'])){
-        $brandName = $jsonData['brandName'];
+      $mobile = $serializer->deserialize($request->getContent(), Mobile::class, 'json');
+      $em->persist($mobile);
+      $em->flush();
 
-        // Check if brand already exist
-        $mobileObject = $mobileRepository->findBy(['brandname' => $brandName]);
+      $jsonMobile = $serializer->serialize($mobile, 'json',[]);
 
-        if(!empty($mobileObject)){
-          return new JsonResponse(['error' => sprintf('This %s already exist', $brandName)]);
-        }
-
-        $newMobile = new Mobile();
-        $newMobile->setBrandname($brandName);
-        $em->persist($newMobile);
-        $em->flush();
-        $jsonMobile = $serializer->serialize([
-          'success' => sprintf('%s Add', $brandName),
-          'object' => $newMobile
-        ], 'json');
-
-        $response = new JsonResponse($jsonMobile, 200, [], true);
-
-        return $response;
-      }
-
-      return new JsonResponse(['error' => 'brandName data missing']);
+      return new JsonResponse($jsonMobile, Response::HTTP_CREATED,[], true);
 
     }
+
+    #[Route('/api/mobile/{id}', name: 'api_delete_mobile', methods: ['DELETE'])]
+    public function deleteMobile(Mobile $mobile, EntityManagerInterface $em): JsonResponse
+    {
+      $em->remove($mobile);
+      $em->flush();
+      return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
 }
 
