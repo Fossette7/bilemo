@@ -72,7 +72,7 @@ class ApiController extends AbstractController
     public function deleteMobile(Mobile $mobile, EntityManagerInterface $em): JsonResponse
     {
       /*  POP UNE ERREUR VOIR AVEC LE PARAMETER CONVERTER
-     if (!$mobile) {
+     if (empty($brandName) {
        throw $this->createNotFoundException(
          'There are no mobiles with the following id: '.$id
        );

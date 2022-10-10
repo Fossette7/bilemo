@@ -2,22 +2,29 @@
 API Rest project 7 -
 Bilemo supply to their customers a mobile list via an API Rest
 ## Technologies
- - PHP 8
+ - PHP 8.0.8
  - Symfony 6.1
- - MySQL
+ - MySQL 5.7.34
 
 ## Installation
 Copy the link on GitHub and clone it on your local repository
 https://github.com/Fossette7/bilemo
 
+Clone the repository to your local path. Use command `git clone`
+
+Inside your directory:  `cd my-project`
+
 Open your **terminal** and **run**: `composer install`
 
-use command `git clone`
+Run the server : `symfony server:start`
 
-Create database: `php bin/console doctrine:database:create`
+Create my new API project : `composer create-project symfony/skeleton my_rest_api`
+
+Create database with: `php bin/console doctrine:database:create`
 
 Open file `.env` and write **username** and **password** for
 
 > DATABASE_URL: `DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7.34&charset=utf8"`
 
+Load the fixture with :  `php bin/console doctrine:fixtures:load`
 
