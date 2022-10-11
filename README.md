@@ -1,6 +1,6 @@
 # BileMo - Creez un web service exposant une API
 API Rest project 7 -
-Bilemo supply to their customers a mobile list via an API Rest
+Bilemo Company supplies to their customers a catalogue of mobile phone via an Rest API
 ## Technologies
  - PHP 8.0.8
  - Symfony 6.1

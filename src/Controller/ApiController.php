@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ApiController extends AbstractController
@@ -72,7 +73,7 @@ class ApiController extends AbstractController
     public function deleteMobile(Mobile $mobile, EntityManagerInterface $em): JsonResponse
     {
       /*  POP UNE ERREUR VOIR AVEC LE PARAMETER CONVERTER
-     if (empty($brandName) {
+     if (empty($mobile) {
        throw $this->createNotFoundException(
          'There are no mobiles with the following id: '.$id
        );
