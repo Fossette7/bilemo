@@ -9,7 +9,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CustomerFixtures extends Fixture
 {
-    private $userPasswordHasher;
+    public const CUSTOMER_REFERENCE = 'customer-';
+    private UserPasswordHasherInterface $userPasswordHasher;
 
     public function __construct(UserPasswordHasherInterface $userPasswordHasher)
     {
@@ -28,7 +29,7 @@ class CustomerFixtures extends Fixture
         $customer->setPassword($this->userPasswordHasher->hashPassword($customer, "123456"));
         $manager->persist($customer);
 
-        //admin user
+      //admin user
         $customerAdmin = new Customer();
         $customerAdmin->setUsername("Vanessa");
         $customerAdmin->setEmail("admin@pommemail.com");
@@ -37,5 +38,8 @@ class CustomerFixtures extends Fixture
         $manager->persist($customerAdmin);
 
         $manager->flush();
+        $this->addReference($this::CUSTOMER_REFERENCE.'1', $customer);
+        $this->addReference($this::CUSTOMER_REFERENCE.'2', $customerAdmin);
+
     }
 }
