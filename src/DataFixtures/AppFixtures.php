@@ -23,12 +23,12 @@ class AppFixtures extends Fixture
 
         for ($i = 0; $i <= 5; $i++) {
           $telephone = new Mobile();
-          $telephone->setBrandname($mobilesNamebrand[$i]);
-          $telephone->setModel("model de type".$i);
-          $telephone->setDescription("Je suis un mobile avec une description".$i);
+          $telephone->setBrandname($mobilesNamebrand);
+          $telephone->setModel("model de type" .$i);
+          $telephone->setDescription("Je suis un mobile avec une description" .$i);
           $telephone->setPrice(rand(300,850));
           $telephone->setCreatedAt(new \DateTime());
-          $telephone->setPicture("photo du produit".$i);
+          $telephone->setPicture("photo du produit" .$i);
           $telephone->setStock($i);
 
           $manager->persist($telephone);
