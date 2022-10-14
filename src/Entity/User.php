@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
@@ -12,22 +14,29 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['show_users'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 30, nullable: true)]
+    #[Groups(['show_users'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 30, nullable: true)]
+    #[Groups(['show_users'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['show_users'])]
+    #[Assert\NotBlank(message: "Merci d'ajouter votre email")]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['show_users'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['show_users'])]
     private ?Customer $customer = null;
 
     public function __contruct()

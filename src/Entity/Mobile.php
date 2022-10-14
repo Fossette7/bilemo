@@ -16,7 +16,7 @@ class Mobile
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "Ajouter le nom de la marque")]
     private ?string $brandname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -39,7 +39,7 @@ class Mobile
 
     public function __contruct()
     {
-      $this->createdAt = new \DateTime;
+      $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
