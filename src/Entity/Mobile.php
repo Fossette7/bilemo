@@ -20,7 +20,7 @@ class Mobile
     private ?string $brandname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Model = null;
+    private ?string $model = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
@@ -28,8 +28,8 @@ class Mobile
     #[ORM\Column(nullable: true)]
     private ?float $price = null;
 
-    #[ORM\Column]
-    private ?\DateTime $createdAt = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
@@ -39,7 +39,7 @@ class Mobile
 
     public function __contruct()
     {
-      $this->createdAt = new \DateTime();
+      $this->createdAt = new \DateTime;
     }
 
     public function getId(): ?int
@@ -61,12 +61,12 @@ class Mobile
 
     public function getModel(): ?string
     {
-        return $this->Model;
+        return $this->model;
     }
 
-    public function setModel(?string $Model): self
+    public function setModel(?string $model): self
     {
-        $this->Model = $Model;
+        $this->model = $model;
 
         return $this;
     }
@@ -95,12 +95,12 @@ class Mobile
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
