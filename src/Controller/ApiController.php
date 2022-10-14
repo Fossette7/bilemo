@@ -72,12 +72,6 @@ class ApiController extends AbstractController
     #[Route('/api/mobile/{id}', name: 'api_delete_mobile', methods: ['DELETE'])]
     public function deleteMobile(Mobile $mobile, EntityManagerInterface $em): JsonResponse
     {
-      /*  POP UNE ERREUR VOIR AVEC LE PARAMETER CONVERTER
-     if (empty($mobile) {
-       throw $this->createNotFoundException(
-         'There are no mobiles with the following id: '.$id
-       );
-     }*/
 
       $em->remove($mobile);
       $em->flush();

@@ -29,7 +29,7 @@ class Mobile
     private ?float $price = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?\DateTime $createdAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
