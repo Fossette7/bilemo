@@ -34,7 +34,7 @@ class User
     #[Groups(['show_users'])]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\ManyToOne(inversedBy: 'users', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['show_users'])]
     private ?Customer $customer = null;
