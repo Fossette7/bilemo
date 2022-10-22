@@ -38,6 +38,7 @@ class ApiUserController extends AbstractController
     }
 
     #[Route('/api/user', name: 'api_create_user', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function createUser(Request $request, SerializerInterface $serializer, EntityManagerInterface $em) :JsonResponse
     {
       /** @var User $user */
@@ -57,6 +58,7 @@ class ApiUserController extends AbstractController
     }
 
     #[Route('/api/user/{id}', name: 'api_delete_user', methods: ['DELETE'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function deleteUser(User $user, EntityManagerInterface $em): JsonResponse
     {
 
