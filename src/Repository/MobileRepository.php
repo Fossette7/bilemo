@@ -39,6 +39,15 @@ class MobileRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAllPagination( $page, $limit)
+    {
+        $querybuilder = $this->createQueryBuilder('builder')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+
+        return $querybuilder->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Mobile[] Returns an array of Mobile objects
 //     */

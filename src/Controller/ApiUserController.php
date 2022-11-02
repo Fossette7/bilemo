@@ -6,6 +6,7 @@ use App\Entity\Customer;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserRepository;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ApiUserController extends AbstractController
 {
     #[Route('/api/users', name: 'api_userslist', methods: ['GET'])]
+    #[Security(name: 'Bearer')]
     public function getUserList(UserRepository $userRepository, SerializerInterface $serializer): JsonResponse
     {
        $users = $userRepository->findAll();
@@ -28,6 +30,7 @@ class ApiUserController extends AbstractController
     }
 
     #[Route('/api/user/{id}', name: 'api_show_user', methods: ['GET'])]
+    #[Security(name: 'Bearer')]
     public function getUserDetail(User $user, SerializerInterface $serializer): JsonResponse
     {
 
@@ -39,6 +42,7 @@ class ApiUserController extends AbstractController
 
     #[Route('/api/user', name: 'api_create_user', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
+    #[Security(name: 'Bearer')]
     public function createUser(Request $request, SerializerInterface $serializer, EntityManagerInterface $em) :JsonResponse
     {
       /** @var User $user */
@@ -59,6 +63,7 @@ class ApiUserController extends AbstractController
 
     #[Route('/api/user/{id}', name: 'api_delete_user', methods: ['DELETE'])]
     #[IsGranted('ROLE_ADMIN')]
+    #[Security(name: 'Bearer')]
     public function deleteUser(User $user, EntityManagerInterface $em): JsonResponse
     {
 

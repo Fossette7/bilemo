@@ -14,24 +14,29 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Nelmio\ApiDocBundle\Annotation\Security;
 
 class ApiController extends AbstractController
 {
+  #[Route('/api/mobiles', name: 'app_api', methods: ['GET'])]
 
-    #[Route('/api/mobiles', name: 'app_api', methods: ['GET'])]
-    public function getMobileList(MobileRepository $mobileRepository, SerializerInterface $serializer ): JsonResponse
-    {
-      $mobiles = $mobileRepository->findAll();
+  public function getMobileListPagination(MobileRepository $mobileRepository, SerializerInterface $serializer, Request $request ): JsonResponse
+  {
+    if(!empty($page = $request->get('page', 1)) && !empty($limit = $request->get('limit', 3))){
 
-      $jsonContent = $serializer->serialize($mobiles, 'json');
+    $mobiles = $mobileRepository->findAllPagination($page, $limit);
 
-      $response = new JsonResponse($jsonContent, 200, [], true);
+    $jsonContent = $serializer->serialize($mobiles, 'json');
 
-      return $response;
-
+    $response = new JsonResponse($jsonContent, 200, [], true);
     }
 
+    return $response;
+
+  }
+
   #[Route('/api/mobile/{id}', name: 'api_show_mobile', methods: ['GET'])]
+  #[Security(name: 'Bearer')]
   public function showMobile(Mobile $mobile, SerializerInterface $serializer ): JsonResponse
   {
     $jsonContent = $serializer->serialize($mobile, 'json');
@@ -41,6 +46,7 @@ class ApiController extends AbstractController
   }
 
     #[Route('/api/mobile', name: 'api_create_mobile', methods: ['POST'])]
+    #[Security(name: 'Bearer')]
     public function createMobile(Request $request, SerializerInterface $serializer, EntityManagerInterface $em) :JsonResponse
     {
       $mobile = $serializer->deserialize($request->getContent(), Mobile::class, 'json');
@@ -54,6 +60,7 @@ class ApiController extends AbstractController
     }
 
   #[Route('/api/mobile/{id}', name: 'api_update_mobile', methods: ['PUT'])]
+  #[Security(name: 'Bearer')]
   public function updateMobile(Request $request, SerializerInterface $serializer, Mobile $currentMobile,
   EntityManagerInterface $em): JsonResponse
   {
@@ -70,6 +77,7 @@ class ApiController extends AbstractController
 
 
     #[Route('/api/mobile/{id}', name: 'api_delete_mobile', methods: ['DELETE'])]
+    #[Security(name: 'Bearer')]
     public function deleteMobile(Mobile $mobile, EntityManagerInterface $em): JsonResponse
     {
 
