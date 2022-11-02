@@ -6,6 +6,7 @@ Bilemo Company supplies to their customers a catalogue of mobile phone via an Re
  - Symfony 6.1
  - MySQL 5.7.34
 
+ [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b5ded4c9754a4ef9b8b97232525ae5fe)](https://www.codacy.com/gh/Fossette7/bilemo/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Fossette7/bilemo&amp;utm_campaign=Badge_Grade)
 ## Installation
 Copy the link on GitHub and clone it on your local repository
 https://github.com/Fossette7/bilemo
@@ -31,3 +32,4 @@ Load the fixture with :  `php bin/console doctrine:fixtures:load`
 ## Use API
 
 > API Documentation : http://www.bilemo.fr/api/doc
+
