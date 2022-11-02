@@ -28,3 +28,6 @@ Open file `.env` and write **username** and **password** for
 
 Load the fixture with :  `php bin/console doctrine:fixtures:load`
 
+## Use API
+
+> API Documentation : http://www.bilemo.fr/api/doc
