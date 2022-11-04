@@ -43,7 +43,7 @@ nelmio_api_doc:
                             type: string
                             default: 123456
             securitySchemes:
-                BearerAuth:
+                bearerAuth:
                     type: apiKey
                     scheme: bearer
                     in: header
