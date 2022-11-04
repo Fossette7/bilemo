@@ -19,9 +19,11 @@ class ApiUserController extends AbstractController
 {
     #[Route('/api/users', name: 'api_userslist', methods: ['GET'])]
     #[Security(name: 'Bearer')]
-    public function getUserList(UserRepository $userRepository, SerializerInterface $serializer): JsonResponse
+    public function getUserList(UserRepository $userRepository, Request $request, SerializerInterface $serializer): JsonResponse
     {
-       $users = $userRepository->findAll();
+      if(!empty($page = $request->get('page', 1)) && !empty($limit = $request->get('limit', 3))){
+       $users = $userRepository->findAllPagination($page, $limit);
+        }
 
        $jsonContent = $serializer->serialize($users, 'json', ['groups' => 'show_users']);
 

@@ -39,6 +39,15 @@ class UserRepository extends ServiceEntityRepository
         }
     }
 
+  public function findAllPagination( $page, $limit)
+  {
+    $querybuilder = $this->createQueryBuilder('builder')
+      ->setFirstResult(($page - 1) * $limit)
+      ->setMaxResults($limit);
+
+    return $querybuilder->getQuery()->getResult();
+  }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */
