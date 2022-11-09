@@ -2,33 +2,73 @@
 API Rest project 7 -
 Bilemo Company supplies to their customers a catalogue of mobile phone via an Rest API
 ## Technologies
- - PHP 8.0.8
- - Symfony 6.1
- - MySQL 5.7.34
+<ul>
+ <li>PHP 8.0.8</li>
+ <li>Symfony 6.1</li> 
+ <li>MySQL 5.7.34</li> 
+</ul>
 
  [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b5ded4c9754a4ef9b8b97232525ae5fe)](https://www.codacy.com/gh/Fossette7/bilemo/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Fossette7/bilemo&amp;utm_campaign=Badge_Grade)
+<hr>
+
 ## Installation
-Copy the link on GitHub and clone it on your local repository
+
+**Copy the link** on GitHub and **clone it** on your local repository
 https://github.com/Fossette7/bilemo
 
-Clone the repository to your local path. Use command `git clone`
+**Clone** the repository to your local path. Use command `git clone`
+inside your directory:  `cd my-project`
 
-Inside your directory:  `cd my-project`
+**Open** your **terminal** and **run**: `composer install`
 
-Open your **terminal** and **run**: `composer install`
+**Create my new API project** : `composer create-project symfony/skeleton my_rest_api`
 
-Run the server : `symfony server:start`
+**Create database** with: `php bin/console doctrine:database:create` (or with symfony Client: `symfony console doctrine:database:create`)
 
-Create my new API project : `composer create-project symfony/skeleton my_rest_api`
+**Add the product tables** with: `php bin/console doctrine:migrations:migrate`
 
-Create database with: `php bin/console doctrine:database:create`
+**Run the migration**: `php bin/console doctrine:migrations:migrate`
 
-Open file `.env` and write **username** and **password** for
+**Open file** `.env` and write your configuration **username** and **password** for
 
 > DATABASE_URL: `DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7.34&charset=utf8"`
 
-Load the fixture with :  `php bin/console doctrine:fixtures:load`
+**Run** the server : `symfony server:start`
+<hr>
+
+### Add test data
+**Load the fixture** with :  `php bin/console doctrine:fixtures:load`
+<hr>
+
+#### Generate keys
+
+Install ***LexikJWT*** : `composer require lexik/jwt-authentication-bundle` 
+
+#### Create public and private key 
+
+`openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa
+_keygen_bits:4096`
+
+`openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem
+-pubout`
+
+(install ***OpenSSL*** if needed check official documentation)
+
+#### In your .env.local
+
+#### Fill up your passphrase :
+
+### > lexik/jwt-authentication-bundle ###
+
+ >JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem`
+JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem 
+ JWT_PASSPHRASE=fdd719e8855fdf770a5141fd0afb817b`
+
+### > lexik/jwt-authentication-bundle ###
+<hr>
 
 ## Use API
 
-> API Documentation : http://www.bilemo.fr/api/doc
+### Documentation access
+
+> API Documentation :  http://yourAdress.domain.fr/doc/api
