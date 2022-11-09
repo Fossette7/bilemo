@@ -23,7 +23,7 @@ class AppFixtures extends Fixture
 
         for ($i = 0; $i <= 5; $i++) {
           $telephone = new Mobile();
-          $telephone->setBrandname($mobilesNamebrand);
+          $telephone->setBrandname($mobilesNamebrand[$i]);
           $telephone->setModel("model de type" .$i);
           $telephone->setDescription("Je suis un mobile avec une description" .$i);
           $telephone->setPrice(rand(300,850));
