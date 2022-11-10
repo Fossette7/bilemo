@@ -21,15 +21,15 @@ class CustomerFixtures extends Fixture
     {
         // $product = new Product();
 
-        //normal user
+        //admin user
         $customer = new Customer();
         $customer->setUsername("Lise");
         $customer->setEmail("pomme@pommemail.com");
-        $customer->setRoles(["ROLE_USER"]);
+        $customer->setRoles(["ROLE_ADMIN"]);
         $customer->setPassword($this->userPasswordHasher->hashPassword($customer, "123456"));
         $manager->persist($customer);
 
-      //admin user
+        //admin user
         $customerAdmin = new Customer();
         $customerAdmin->setUsername("Vanessa");
         $customerAdmin->setEmail("admin@pommemail.com");
