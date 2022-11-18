@@ -13,7 +13,7 @@ Bilemo Company supplies to their customers a catalogue of mobile phone via an Re
 
 ## Installation
 
-**Copy the link** on GitHub and **clone it** on your local repository
+### step1: **Copy the link** on GitHub and **clone it** on your local repository
 https://github.com/Fossette7/bilemo
 
 **Clone** the repository to your local path. Use command `git clone`
@@ -66,6 +66,15 @@ JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
 
 ### > lexik/jwt-authentication-bundle ###
 <hr>
+
+To test the API you will need a token
+
+Go to https://127.0.0.1:8000/api/doc
+
+add :
+
+"username":"admin@pommemail.com",
+"password":"123456"
 
 ## Use API
 

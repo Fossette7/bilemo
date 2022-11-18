@@ -3,7 +3,7 @@ nelmio_api_doc:
         info:
             title: BileMo App
             description: Premium Mobile phone catalogue for your customer.
-            version: 2.0.0
+            version: 1.0.1
         paths:
             /api/login_check:
                 post:
@@ -43,15 +43,12 @@ nelmio_api_doc:
                             type: string
                             default: 123456
             securitySchemes:
-                bearerAuth:
-                    type: apiKey
+                Bearer:
+                    type: http
                     scheme: bearer
-                    in: header
-                    name: Authorization
                     bearerFormat: JWT
         security:
-            - bearerAuth: []
+            - Bearer: []
     areas: # to filter documented areas
         path_patterns:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
-

@@ -42,7 +42,6 @@ class UserRepository extends ServiceEntityRepository
   public function findAllPagination( $page, $limit)
   {
     $querybuilder = $this->createQueryBuilder('builder')
-
       ->setFirstResult(($page - 1) * $limit)
       ->setMaxResults($limit);
 
