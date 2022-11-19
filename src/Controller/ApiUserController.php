@@ -53,10 +53,15 @@ class ApiUserController extends AbstractController
     $logedCustomer = $token->getToken()->getUser();
 
     // Vérifier si le user $user dépend bien du customer récupéré via l'id (dump($user->getCustomer());
-    // Si le customer est différent on retourne la réponse sans data
+    // Si le customer est différent on retourne la réponse avec le message d erreur
     if($user->getCustomer()->getId() !== $logedCustomer->getId())
     {
-      return new JsonResponse('{}', Response::HTTP_OK, [], true);
+      return new JsonResponse(
+        json_encode(['message' => 'Error. Customer not associate to your account']),
+        Response::HTTP_UNAUTHORIZED,
+        [],
+        true
+      );
     }
 
     $jsonContent = $serializer->serialize($user, 'json', ['groups' => 'show_users']);
@@ -96,8 +101,20 @@ class ApiUserController extends AbstractController
    * @Security(name="Bearer")
    * @IsGranted("ROLE_ADMIN")
    */
-  public function deleteUser(User $user, EntityManagerInterface $em): JsonResponse
+  public function deleteUser(TokenStorageInterface $token, User $user, EntityManagerInterface $em): JsonResponse
   {
+
+    // Vérifier si le user $user dépend bien du customer récupéré via l'id (dump($user->getCustomer());
+    // Si le customer est différent on retourne la réponse avec message d erreur
+    if($user->getCustomer()->getId() !== $logedCustomer->getId())
+    {
+      return new JsonResponse(
+        json_encode(['message' => 'Error. Customer not associate to your account']),
+        Response::HTTP_UNAUTHORIZED,
+        [],
+        true
+      );
+    }
 
     $em->remove($user);
     $em->flush();
