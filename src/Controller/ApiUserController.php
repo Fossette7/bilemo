@@ -97,13 +97,13 @@ class ApiUserController extends AbstractController
   }
 
   /**
-   * @Route("/api/user", name="api_create_user", methods={"DELETE"})
+   * @Route("/api/user/{id}", name="api_create_user", methods={"DELETE"})
    * @Security(name="Bearer")
    * @IsGranted("ROLE_ADMIN")
    */
   public function deleteUser(TokenStorageInterface $token, User $user, EntityManagerInterface $em): JsonResponse
   {
-
+    $logedCustomer = $token->getToken()->getUser();
     // Vérifier si le user $user dépend bien du customer récupéré via l'id (dump($user->getCustomer());
     // Si le customer est différent on retourne la réponse avec message d erreur
     if($user->getCustomer()->getId() !== $logedCustomer->getId())
