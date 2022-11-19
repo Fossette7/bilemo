@@ -46,13 +46,18 @@ class ApiUserController extends AbstractController
    * @Route("/api/user/{id}", name="api_show_user", methods={"GET"})
    * @Security(name="Bearer")
    */
-  public function getUserDetail(User $user, SerializerInterface $serializer): JsonResponse
+  public function getUserDetail(TokenStorageInterface $token, User $user, SerializerInterface $serializer): JsonResponse
   {
     // Récupération du token pour avoir le customer
+    /** @var Customer $logedCustomer */
+    $logedCustomer = $token->getToken()->getUser();
 
     // Vérifier si le user $user dépend bien du customer récupéré via l'id (dump($user->getCustomer());
-
-    // Si pas autorisé retourné un json response avec code erreur
+    // Si le customer est différent on retourne la réponse sans data
+    if($user->getCustomer()->getId() !== $logedCustomer->getId())
+    {
+      return new JsonResponse('{}', Response::HTTP_OK, [], true);
+    }
 
     $jsonContent = $serializer->serialize($user, 'json', ['groups' => 'show_users']);
 
