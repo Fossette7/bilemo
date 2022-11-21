@@ -31,7 +31,7 @@ In server MySQL
 > DATABASE_URL: `DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7.34&charset=utf8"`
 **Create database** with: `php bin/console doctrine:database:create` (or with symfony Client: `symfony console doctrine:database:create`)
 
-**Add the product tables** with: `php bin/console doctrine:make:migration`
+**Create table on database with: `php bin/console doctrine:schema:up -f`
 
 **Run the migration**: `php bin/console doctrine:migrations:migrate`
 
