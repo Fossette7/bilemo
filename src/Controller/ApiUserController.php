@@ -15,14 +15,65 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Entity\Customer;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 
 
 class ApiUserController extends AbstractController
 {
   /**
+   * List of users of a customer.
    * @Route("/api/users", name="api_userslist", methods={"GET"})
+   * @OA\Response(
+   *     response=200,
+   *     description="Returns the users list of a Registered Customer",
+   *     @OA\JsonContent(
+   *        type="array",
+   *        @OA\Items(ref=@Model(type=User::class, groups={"show_users"}))
+   *     )
+   * )
+   * )
+   * @OA\Response(
+   *     response=401,
+   *     description="Unauthorized, Expired JWT Token",
+   *     @OA\JsonContent(
+   *        @OA\Property(
+   *         property="code",
+   *         type="integer",
+   *         example="401"
+   *        ),
+   *        @OA\Property(
+   *         property="message",
+   *         type="string",
+   *         example="Expired JWT Token"
+   *        ),
+   *     )
+   * )
+   * @OA\Response(
+   *     response=404,
+   *     description="Not found, object does not exist",
+   *     @OA\JsonContent(
+   *     )
+   * )
+   * @OA\Parameter(
+   *     name="page",
+   *     example="1",
+   *     in="query",
+   *     description="Page sélectionnée",
+   *     @OA\Schema(type="int")
+   * )
+   * @OA\Parameter(
+   *     name="limit",
+   *     example="2",
+   *     in="query",
+   *     description="Nombre max d'élément à récupérer souhaité",
+   *     @OA\Schema(type="int")
+   * )
+   *
+   * @OA\Tag(name="Users")
    * @Security(name="Bearer")
    */
+
   public function getUserList(
     UserRepository $userRepository,
     Request $request,
@@ -43,7 +94,9 @@ class ApiUserController extends AbstractController
   }
 
   /**
+   * Show the detail of a user
    * @Route("/api/user/{id}", name="api_show_user", methods={"GET"})
+   * @OA\Tag(name="Users")
    * @Security(name="Bearer")
    */
   public function getUserDetail(TokenStorageInterface $token, User $user, SerializerInterface $serializer): JsonResponse
@@ -54,8 +107,7 @@ class ApiUserController extends AbstractController
 
     // Vérifier si le user $user dépend bien du customer récupéré via l'id (dump($user->getCustomer());
     // Si le customer est différent on retourne la réponse avec le message d erreur
-    if($user->getCustomer()->getId() !== $logedCustomer->getId())
-    {
+    if ($user->getCustomer()->getId() !== $logedCustomer->getId()) {
       return new JsonResponse(
         json_encode(['message' => 'Error. Customer not associate to your account']),
         Response::HTTP_UNAUTHORIZED,
@@ -71,6 +123,7 @@ class ApiUserController extends AbstractController
   }
 
   /**
+   * Create a new user for a registered Customer
    * @Route("/api/user", name="api_create_user", methods={"POST"})
    * @Security(name="Bearer")
    * @IsGranted("ROLE_ADMIN")
@@ -97,7 +150,9 @@ class ApiUserController extends AbstractController
   }
 
   /**
-   * @Route("/api/user/{id}", name="api_create_user", methods={"DELETE"})
+   * Delete a user for a registered Customer
+   * @Route("/api/user/{id}", name="api_delete_user", methods={"DELETE"})
+   * @OA\Tag(name="Users")
    * @Security(name="Bearer")
    * @IsGranted("ROLE_ADMIN")
    */
@@ -106,10 +161,9 @@ class ApiUserController extends AbstractController
     $logedCustomer = $token->getToken()->getUser();
     // Vérifier si le user $user dépend bien du customer récupéré via l'id (dump($user->getCustomer());
     // Si le customer est différent on retourne la réponse avec message d erreur
-    if($user->getCustomer()->getId() !== $logedCustomer->getId())
-    {
+    if ($user->getCustomer()->getId() !== $logedCustomer->getId()) {
       return new JsonResponse(
-        json_encode(['message' => 'Error. Customer not associate to your account']),
+        json_encode(['message' => 'Error. Unauthorized access']),
         Response::HTTP_UNAUTHORIZED,
         [],
         true
