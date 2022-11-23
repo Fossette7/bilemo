@@ -10,16 +10,16 @@ nelmio_api_doc:
                     operationId: postCredentialsItem
                     tags:
                         - Token
-                    summary: obtenir le token JWT
+                    summary: Get a JWT Token
                     requestBody:
-                        description: créer un nouveau token JWT
+                        description: Create a new JWT Token
                         content:
                             application/json:
                                 schema:
                                     $ref: '#/components/schemas/Credentials'
                     responses:
                         '200':
-                            description: Récupère le token JWT
+                            description: Successfully get a JWT token
                             content:
                                 application/json:
                                     schema:

@@ -23,15 +23,17 @@ inside your directory:  `cd my-project`
 
 **Create my new API project** : `composer create-project symfony/skeleton my_rest_api`
 
-**Create database** with: `php bin/console doctrine:database:create` (or with symfony Client: `symfony console doctrine:database:create`)
+In server MySQL
 
-**Add the product tables** with: `php bin/console doctrine:migrations:migrate`
-
-**Run the migration**: `php bin/console doctrine:migrations:migrate`
-
-**Open file** `.env` and write your configuration **username** and **password** for
+**Database configuration**
+**Open file** `.env` and write your configuration **username** and **password** 
 
 > DATABASE_URL: `DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7.34&charset=utf8"`
+**Create database** with: `php bin/console doctrine:database:create` (or with symfony Client: `symfony console doctrine:database:create`)
+
+**Create table on database with: `php bin/console doctrine:schema:up -f`
+
+**Run the migration**: `php bin/console doctrine:migrations:migrate`
 
 **Run** the server : `symfony server:start`
 <hr>

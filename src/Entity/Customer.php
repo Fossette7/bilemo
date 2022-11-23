@@ -20,18 +20,17 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Unique]
     #[Groups(['show_users'])]
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Groups(['show_users'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Groups(['show_users'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 150)]
