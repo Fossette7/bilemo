@@ -17,7 +17,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
-
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ApiUserController extends AbstractController
 {
@@ -47,12 +47,6 @@ class ApiUserController extends AbstractController
    *         type="string",
    *         example="Expired JWT Token"
    *        ),
-   *     )
-   * )
-   * @OA\Response(
-   *     response=404,
-   *     description="Not found, object does not exist",
-   *     @OA\JsonContent(
    *     )
    * )
    * @OA\Parameter(
@@ -96,11 +90,49 @@ class ApiUserController extends AbstractController
   /**
    * Show the detail of a user
    * @Route("/api/user/{id}", name="api_show_user", methods={"GET"})
+   * @OA\Response(
+   *     response=Response::HTTP_ALREADY_REPORTED,
+   *     description="Retourne l'utilisateur correspondant à l'id",
+   *     @Model(type=User::class, groups={"show_users"})
+   * )
+   *
+   * @OA\Response(
+   *     response=401,
+   *     description="Unauthorized, Expired JWT Token",
+   *     @OA\JsonContent(
+   *        @OA\Property(
+   *         property="code",
+   *         type="integer",
+   *         example="401"
+   *        ),
+   *        @OA\Property(
+   *         property="message",
+   *         type="string",
+   *         example="Expired JWT Token"
+   *        ),
+   *     )
+   * )
+   * @OA\Response (
+   *   response=404,
+   *   description="No user found for this Id",
+   *     @OA\JsonContent(
+   *        @OA\Property(
+   *         property="error",
+   *         type="string",
+   *         example="Cette utilisateur n'existe pas"
+   *        )
+   *     )
+   * )
+   * )
    * @OA\Tag(name="Users")
    * @Security(name="Bearer")
    */
   public function getUserDetail(TokenStorageInterface $token, User $user, SerializerInterface $serializer): JsonResponse
   {
+    if (empty($user)) {
+      return new JsonResponse(json_encode(["error" => "Cette utilisateur n'existe pas"]), Response::HTTP_NOT_FOUND, [], true);
+    }
+
     // Récupération du token pour avoir le customer
     /** @var Customer $logedCustomer */
     $logedCustomer = $token->getToken()->getUser();
@@ -119,26 +151,125 @@ class ApiUserController extends AbstractController
     $jsonContent = $serializer->serialize($user, 'json', ['groups' => 'show_users']);
 
     return new JsonResponse($jsonContent, Response::HTTP_OK, [], true);
-
   }
 
   /**
    * Create a new user for a registered Customer
    * @Route("/api/user", name="api_create_user", methods={"POST"})
+   *
+   * @OA\RequestBody (
+   *      required=true,
+   *      @OA\MediaType(
+   *        mediaType="application/json",
+   *        @OA\Schema (
+   *          @OA\Property(
+   *            property="firstname",
+   *            description="prénom du nouvelle utilisateur",
+   *            type="string",
+   *            example="alain"
+   *          ),
+   *          @OA\Property(
+   *            property="lastname",
+   *            description="nom du nouvelle utilisateur",
+   *            type="string",
+   *            example="deloin"
+   *          ),
+   *          @OA\Property(
+   *            property="email",
+   *            description="email du nouvelle utilisateur",
+   *            type="email",
+   *            example="alaindelaoin@gmail.com"
+   *          )
+   *        )
+   *      )
+   *   )
+   *
+   *
+   * @OA\Response(
+   *     response=201,
+   *     description="Create a new user",
+   *     @OA\JsonContent(
+   *        @OA\Property(
+   *          property="id",
+   *          type="integer",
+   *          example="43"
+   *          ),
+   *        @OA\Property(
+   *          property="firstname",
+   *          type="string",
+   *          example="alain"
+   *          ),
+   *          @OA\Property(
+   *          property="lastname",
+   *          type="string",
+   *          example="deloin"
+   *          ),
+   *          @OA\Property(
+   *          property="email",
+   *          type="string",
+   *          example="alaindelaoin@gmail.com"
+   *          )
+   *     )
+   * )
+   * @OA\Response(
+   *     response=401,
+   *     description="Unauthorized, Expired JWT Token",
+   *     @OA\JsonContent(
+   *        @OA\Property(
+   *         property="code",
+   *         type="integer",
+   *         example="401"
+   *        ),
+   *        @OA\Property(
+   *         property="message",
+   *         type="string",
+   *         example="Expired JWT Token"
+   *        ),
+   *     )
+   * )
+   * @OA\Response(
+   *     response=409,
+   *     description="Entity already exist",
+   *     @OA\JsonContent(
+   *        @OA\Property(
+   *         property="errors",
+   *         type="array",
+   *         @OA\Items(
+   *          type="string",
+   *          example="Email already used"
+   *          )
+   *        )
+   *     )
+   * )
+   * @OA\Tag(name="Users")
    * @Security(name="Bearer")
    * @IsGranted("ROLE_ADMIN")
    */
   public function createUser(
     Request $request,
     SerializerInterface $serializer,
-    EntityManagerInterface $em
+    EntityManagerInterface $em,
+    TokenStorageInterface $token,
+    UserRepository $userRepository,
+    ValidatorInterface $validator
   ): JsonResponse {
     /** @var User $user */
     $user = $serializer->deserialize($request->getContent(), User::class, 'json');
+    $user->setCreatedAt(new \DateTime());
     $datas = json_decode($request->getContent(), 1);
-    $customer = $em->getRepository(Customer::class)->find($datas['customer']);
+    $logedCustomer = $token->getToken()->getUser();
+    $user->setCustomer($logedCustomer);
 
-    $user->setCustomer($customer);
+    $errorText = ['errors' => []];
+    $error = $validator->validate($user);
+    if($error->count() > 0)
+    {
+      foreach ($error as $e){
+        $errorText['errors'][] = $e->getMessage();
+      }
+
+      return new JsonResponse(json_encode($errorText), Response::HTTP_CONFLICT, [], true);
+    }
 
     $em->persist($user);
     $em->flush();
@@ -146,12 +277,17 @@ class ApiUserController extends AbstractController
     $jsonUser = $serializer->serialize($user, 'json', ['groups' => 'show_users']);
 
     return new JsonResponse($jsonUser, Response::HTTP_CREATED, [], true);
-
   }
 
   /**
    * Delete a user for a registered Customer
    * @Route("/api/user/{id}", name="api_delete_user", methods={"DELETE"})
+   *
+   * @OA\Response(
+   *     response=Response::HTTP_NO_CONTENT,
+   *     description="No content"
+   * )
+   *
    * @OA\Tag(name="Users")
    * @Security(name="Bearer")
    * @IsGranted("ROLE_ADMIN")

@@ -20,6 +20,7 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Unique]
     #[Groups(['show_users'])]
     private ?string $email = null;
 

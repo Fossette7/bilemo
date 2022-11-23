@@ -4,9 +4,7 @@ namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -17,6 +15,8 @@ use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use App\Repository\MobileRepository;
 use App\Entity\Mobile;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiMobileController extends AbstractController
 {
@@ -50,13 +50,18 @@ class ApiMobileController extends AbstractController
    * @OA\Tag(name="Mobile_product")
    * @Security(name="Bearer")
    */
-  public function getMobileListPagination(MobileRepository $mobileRepository, SerializerInterface $serializer, Request $request, TagAwareCacheInterface $cachePool ): JsonResponse
-  {
-    if(!empty($page = $request->get('page', 1)) && !empty($limit = $request->get('limit', 3))){
+  public function getMobileListPagination(
+    MobileRepository $mobileRepository,
+    SerializerInterface $serializer,
+    Request $request,
+    TagAwareCacheInterface $cachePool
+  ): JsonResponse {
+    if (!empty($page = $request->get('page', 1)) && !empty($limit = $request->get('limit', 3))) {
 
-      $idCache = "getAllMobiles-" . $page . "-" . $limit;
-      $mobileList = $cachePool->get($idCache, function (ItemInterface $item) use ($mobileRepository, $page, $limit){
+      $idCache = "getAllMobiles-".$page."-".$limit;
+      $mobileList = $cachePool->get($idCache, function (ItemInterface $item) use ($mobileRepository, $page, $limit) {
         $item->tag("mobilesCache");
+
         return $mobileRepository->findAllPagination($page, $limit);
       });
 
@@ -77,18 +82,17 @@ class ApiMobileController extends AbstractController
    *     response=Response::HTTP_OK,
    *     description="Retourne le mobile correspondant l'id",
    *     @Model(type=Mobile::class)
-   *
    * )
    * @OA\Response (
    *   response=404,
-   *   description="No product found for this Id"
-   * )
-   * @OA\Parameter(
-   *     name="id",
-   *     example="3",
-   *     in="path",
-   *     description="Id du mobile",
-   *     @OA\Schema(type="int")
+   *   description="No product found for this Id",
+   *     @OA\JsonContent(
+   *        @OA\Property(
+   *         property="error",
+   *         type="string",
+   *         example="Ce produit n'existe pas"
+   *        )
+   *     )
    * )
    *
    * @Security(name="Bearer")
@@ -97,15 +101,12 @@ class ApiMobileController extends AbstractController
    */
   public function showMobile(Mobile $mobile, SerializerInterface $serializer): JsonResponse
   {
-    if ($mobile){
-    $jsonContent = $serializer->serialize($mobile, 'json');
-
-    $response = new JsonResponse($jsonContent, Response::HTTP_OK, [], true);
-    return $response;
+    if ($mobile) {
+      $jsonContent = $serializer->serialize($mobile, 'json');
+      return new JsonResponse($jsonContent, Response::HTTP_OK, [], true);
     }
 
-    $response = new JsonResponse(["error" => "Ce produit n'existe pas"], 404);
-    return $response;
+    return JsonResponse(json_encode(["error" => "Ce produit n'existe pas"]), Response::HTTP_NOT_FOUND);
   }
 
 }
