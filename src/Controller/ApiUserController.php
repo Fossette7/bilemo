@@ -287,7 +287,10 @@ class ApiUserController extends AbstractController
    *     response=Response::HTTP_NO_CONTENT,
    *     description="No content"
    * )
-   *
+   ** @OA\Response(
+   *     response=Response::HTTP_UNAUTHORIZED,
+   *     description="Unauthorized"
+   * )
    * @OA\Tag(name="Users")
    * @Security(name="Bearer")
    * @IsGranted("ROLE_ADMIN")
