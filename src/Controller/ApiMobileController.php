@@ -27,7 +27,7 @@ class ApiMobileController extends AbstractController
    *
    * @OA\Response(
    *     response=Response::HTTP_OK,
-   *     description="Retourne tous les mobiles.",
+   *     description="Return all mobiles.",
    *     @OA\JsonContent(
    *        type="array",
    *        @OA\Items(ref=@Model(type=Mobile::class))
@@ -37,14 +37,14 @@ class ApiMobileController extends AbstractController
    *     name="page",
    *     example="1",
    *     in="query",
-   *     description="Page sélectionnée",
+   *     description="Selected page",
    *     @OA\Schema(type="int")
    * )
    * @OA\Parameter(
    *     name="limit",
    *     example="2",
    *     in="query",
-   *     description="Nombre max d'élément à récupérer souhaité",
+   *     description="Max number of items to pick up",
    *     @OA\Schema(type="int")
    * )
    * @OA\Tag(name="Mobile_product")
@@ -80,7 +80,7 @@ class ApiMobileController extends AbstractController
    * @Route("/api/mobile/{id}", name="api_show_mobile", methods={"GET"})
    * @OA\Response(
    *     response=Response::HTTP_OK,
-   *     description="Retourne le mobile correspondant l'id",
+   *     description="Return mobile according to id",
    *     @Model(type=Mobile::class)
    * )
    * @OA\Response (
