@@ -91,8 +91,8 @@ class ApiUserController extends AbstractController
    * Show the detail of a user
    * @Route("/api/user/{id}", name="api_show_user", methods={"GET"})
    * @OA\Response(
-   *     response=Response::HTTP_ALREADY_REPORTED,
-   *     description="Retourne l'utilisateur correspondant à l'id",
+   *     response=Response::HTTP_OK,
+   *     description="Return user according to id",
    *     @Model(type=User::class, groups={"show_users"})
    * )
    *
@@ -119,7 +119,7 @@ class ApiUserController extends AbstractController
    *        @OA\Property(
    *         property="error",
    *         type="string",
-   *         example="Cette utilisateur n'existe pas"
+   *         example="Cet utilisateur n'existe pas"
    *        )
    *     )
    * )
@@ -130,7 +130,7 @@ class ApiUserController extends AbstractController
   public function getUserDetail(TokenStorageInterface $token, User $user, SerializerInterface $serializer): JsonResponse
   {
     if (empty($user)) {
-      return new JsonResponse(json_encode(["error" => "Cette utilisateur n'existe pas"]), Response::HTTP_NOT_FOUND, [], true);
+      return new JsonResponse(json_encode(["error" => "Cet utilisateur n'existe pas"]), Response::HTTP_NOT_FOUND, [], true);
     }
 
     // Récupération du token pour avoir le customer
@@ -164,21 +164,21 @@ class ApiUserController extends AbstractController
    *        @OA\Schema (
    *          @OA\Property(
    *            property="firstname",
-   *            description="prénom du nouvelle utilisateur",
+   *            description="new user's firstname",
    *            type="string",
-   *            example="alain"
+   *            example="Alain"
    *          ),
    *          @OA\Property(
    *            property="lastname",
-   *            description="nom du nouvelle utilisateur",
+   *            description="new user's lastname",
    *            type="string",
-   *            example="deloin"
+   *            example="Deloin"
    *          ),
    *          @OA\Property(
    *            property="email",
-   *            description="email du nouvelle utilisateur",
+   *            description="new user's email",
    *            type="email",
-   *            example="alaindelaoin@gmail.com"
+   *            example="alaindeloin@gmail.com"
    *          )
    *        )
    *      )
@@ -197,17 +197,17 @@ class ApiUserController extends AbstractController
    *        @OA\Property(
    *          property="firstname",
    *          type="string",
-   *          example="alain"
+   *          example="Alain"
    *          ),
    *          @OA\Property(
    *          property="lastname",
    *          type="string",
-   *          example="deloin"
+   *          example="Deloin"
    *          ),
    *          @OA\Property(
    *          property="email",
    *          type="string",
-   *          example="alaindelaoin@gmail.com"
+   *          example="alaindeloin@gmail.com"
    *          )
    *     )
    * )
